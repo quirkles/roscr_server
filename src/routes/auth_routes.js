@@ -32,10 +32,6 @@ const init_auth_routes = app => {
     })(req, res, next);
   });
 
-  app.get('/signup', (req, res) => {
-    res.render('signup.html');
-  });
-
   app.post('/signup', (req, res, next) => {
     user_model.create(Object.assign({}, req.body, {_id: cuid()}), (err, user) => {
       if (err) {

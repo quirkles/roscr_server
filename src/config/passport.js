@@ -1,5 +1,5 @@
 import passport from 'passport';
-import  {Strategy as local_strategy} from 'passport-local';
+import {Strategy as local_strategy} from 'passport-local';
 
 import user_model, {compare_password_with_hash} from '../models/user_model.js';
 
@@ -16,10 +16,11 @@ const init_passport = app => {
       done(err, user);
     });
   });
-  
-  passport.use(new local_strategy(
-    function(username, password, done) {
-      user_model.findOne({ username: username }, function (err, user) {
+
+  passport.use(new local_strategy({
+    usernameField: 'email_address',
+  }, (email, password, done) => {
+      user_model.findOne({ email }, function (err, user) {
         if (err) {
           return done(err);
         } else if (!user) {
