@@ -19,8 +19,8 @@ const init_passport = app => {
 
   passport.use(new local_strategy({
     usernameField: 'email_address',
-  }, (email, password, done) => {
-      user_model.findOne({ email }, function (err, user) {
+  }, (email_address, password, done) => {
+      user_model.findOne({ email_address }, function (err, user) {
         if (err) {
           return done(err);
         } else if (!user) {
