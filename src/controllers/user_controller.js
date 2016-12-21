@@ -1,5 +1,21 @@
 import user_model from '../models/user_model';
 
-export const fetch_users = (req, res) => {
-  user_model.find({}, (err, users) => res.json({success: true, users}));
+export const fetch_user_by_id = (req, res) => {
+  user_model.findById(req.params.user_id)
+  .exec((find_user_error, user) => {
+    if (find_user_error) {
+      return find_user_error;
+    } else if (user === null) {
+      return res.status(404).json({
+        success: false,
+        error_code: 'USER_NOT_FOUND',
+        message: `Unable to find user with id: ${req.params.user_id}`
+      });
+    } else {
+      return res.json({
+        success: true,
+        user
+      });
+    }
+  });
 };

@@ -13,10 +13,6 @@ const init_routes = app => {
     console.log(req.user);
     res.json({user: req.user});
   });
-
-  app.get('*', (req, res) => {
-    res.render('index.html');
-  });
 };
 
 export default init_routes;

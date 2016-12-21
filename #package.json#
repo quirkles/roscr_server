@@ -1,0 +1,41 @@
+{
+  "name": "node_server_boilerplate",
+  "version": "1.0.0",
+  "description": "A boilerplate for the backend of node apps",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "babelify": "babel src -d dist --copy-files",
+    "build": "npm run clean && npm run babelify",
+    "start": "npm run build && node dist/app.js",
+    "start:dev": "babel-node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon --exec babel-node --presets=latest -- src/app.js"
+  },
+  "author": "quirkles",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^0.8.7",
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "cuid": "^1.3.8",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "mongoose": "^4.6.7",
+    "morgan": "^1.7.0",
+    "nunjucks": "^3.0.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "ramda": "^0.22.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.2",
+    "babel-eslint": "^7.1.0",
+    "babel-preset-latest": "^6.16.0",
+    "eslint": "^3.10.0",
+    "eslint-plugin-eslint-snake-case": "0.0.6",
+    "nodemon": "^1.11.0",
+    "rimraf": "^2.5.4"
+  }
+}
