@@ -58,7 +58,6 @@ if (!user_schema.options.toJSON) {
 
 user_schema.options.toJSON.transform = (doc, ret) => omit(['_id', 'password'], rename_keys({_id: 'id'}, ret));
 
-
 const user_model = mongoose.model('User', user_schema);
 
 export default user_model;
