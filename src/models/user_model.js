@@ -21,6 +21,10 @@ const user_schema = new mongoose.Schema({
   password: {
     type: String
   },
+  city: String,
+  country: String,
+  about_me: String,
+  profession: String,
   last_modified: Date,
   created: Date
 });
