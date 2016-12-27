@@ -11,6 +11,7 @@ export const fetch_circle_by_id = (req, res) => {
       return res.status(404).json({
         success: false,
         error_code: 'CIRCLE_NOT_FOUND',
+        missing_circle_id: req.params.circle_id,
         message: `Unable to find circle with id: ${req.params.circle_id}`
       });
     } else {
