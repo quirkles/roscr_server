@@ -57,7 +57,7 @@ app.use(allow_cross_domain);
 
 mongoose.connect(uri, error => console.log(error ?
   `Problem connecting to the database: ${error}` :
-  'Made connection with the database'
+  `Made connection with the database at ${uri}`
 ));
 
 init_passport(app);
