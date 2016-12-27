@@ -26,7 +26,15 @@ const user_schema = new mongoose.Schema({
   about_me: String,
   profession: String,
   last_modified: Date,
-  created: Date
+  created: Date,
+  circles_created: [{
+    type: String,
+    ref: 'Circle'
+  }],
+  circles_as_member: [{
+    type: String,
+    ref: 'Circle'
+  }]
 });
 
 export const compare_password_with_hash = (password, hash) => bcrypt.compareSync(password, hash);

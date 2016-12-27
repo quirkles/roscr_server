@@ -14,8 +14,9 @@ const init_routes = app => {
   init_circle_routes(app);
 
   app.get('/me', (req, res)=>{
-    console.log(req.user);
-    res.json({user: req.user});
+    res.json({
+      user: req.user || 'not logged in'
+    });
   });
 };
 

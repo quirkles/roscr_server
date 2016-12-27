@@ -18,10 +18,11 @@ const init_auth_routes = app => {
           message: info.message
         });
       } else {
-        return req.logIn(user, login_err => {
+        req.logIn(user, login_err => {
           if (login_err) {
             return next(login_err);
           } else {
+            console.log('###!!!! logged in user !!!###', user)
             return res.json({
               success: true,
               user

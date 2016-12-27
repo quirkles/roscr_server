@@ -23,14 +23,25 @@ export const fetch_circle_by_id = (req, res) => {
 };
 
 export const create_circle = (req, res, next) => {
-  circle_model.create(Object.assign({}, req.body, {_id: cuid()}), (circle_create_err, circle) => {
+  circle_model.create(Object.assign({}, req.body, {
+    _id: cuid(),
+    created_by: req.user && req.user.id || null
+  }), (circle_create_err, circle) => {
     if (circle_create_err) {
       console.log(circle_create_err);
       return next(circle_create_err);
     } else {
-      return res.json({
-        success: true,
-        circle,
+      req.user.circles_created.push(circle.id);
+      return req.user.save(user_save_err => {
+        if (user_save_err) {
+          return next(user_save_err);
+        } else {
+          return res.json({
+            success: true,
+            circle,
+          });
+
+        }
       });
     }
   });

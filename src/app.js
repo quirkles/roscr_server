@@ -3,9 +3,7 @@ import body_parser from 'body-parser';
 import cookie_parser from 'cookie-parser';
 import session from 'express-session';
 import mongoose from 'mongoose';
-import nunjucks from 'nunjucks';
 import morgan from 'morgan';
-import path from 'path';
 
 import init_routes from './routes';
 import {uri} from './config/mongodb';
@@ -20,22 +18,17 @@ const allowed_origins = ['http://localhost:3000', 'https://hidden-castle-70402.h
 const allow_cross_domain = (req, res, next) => {
     const origin = req.headers.origin;
 
+    res.header('Access-Control-Allow-Credentials', true);
+
     if (allowed_origins.indexOf(origin) > -1){
          res.setHeader('Access-Control-Allow-Origin', origin);
     }
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
     next();
 };
 
-
-app.set('view engine', 'nunjucks');
-
-// Setup nunjucks templating engine
-nunjucks.configure(path.join(__dirname, 'views'), {
-  autoescape: true,
-  express: app
-});
+app.use(morgan('combined'));
 
 app.use(cookie_parser());
 
@@ -51,7 +44,6 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.use(morgan('combined'));
 
 app.use(allow_cross_domain);
 
