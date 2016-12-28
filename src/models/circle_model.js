@@ -17,6 +17,16 @@ const payout_event_schema = new mongoose.Schema({
   circle_member_id: String
 });
 
+const circle_activity_schema = new mongoose.Schema({
+  _id: String,
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  activity_type: String,
+  activity_summary: String
+});
+
 const circle_schema = new mongoose.Schema({
   _id: {
     type: String
@@ -44,10 +54,7 @@ const circle_schema = new mongoose.Schema({
     type: Array,
     default: []
   },
-  activity: {
-    type: Array,
-    default: []
-  },
+  activity: [circle_activity_schema],
   payout_events: [payout_event_schema],
   savings_goals: [savings_goal_schema],
   created: {

@@ -22,7 +22,7 @@ const init_auth_routes = app => {
           if (login_err) {
             return next(login_err);
           } else {
-            console.log('###!!!! logged in user !!!###', user)
+            console.log('###!!!! logged in user !!!###', user);
             return res.json({
               success: true,
               user
@@ -34,7 +34,15 @@ const init_auth_routes = app => {
   });
 
   app.post('/signup', (req, res, next) => {
-    user_model.create(Object.assign({}, req.body, {_id: cuid()}), (err, user) => {
+
+    const user_data = Object.assign({
+      _id: cuid(),
+      activity: {
+        activity_type: 'USER_CREATED'
+      }
+    }, req.body);
+
+    user_model.create(user_data, (err, user) => {
       if (err) {
         console.log(err);
         return next(err);

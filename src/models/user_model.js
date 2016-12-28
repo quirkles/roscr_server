@@ -1,11 +1,23 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import cuid from 'cuid';
-import {omit} from 'ramda';
+import {assoc, omit} from 'ramda';
 
 import {rename_keys} from '../utils/object';
 
 const SALT_WORK_FACTOR = 10;
+
+const user_activity_schema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: cuid()
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  activity_type: String
+});
 
 const user_schema = new mongoose.Schema({
   _id: String,
@@ -27,6 +39,7 @@ const user_schema = new mongoose.Schema({
   profession: String,
   last_modified: Date,
   created: Date,
+  activity: [user_activity_schema],
   circles_created: [{
     type: String,
     ref: 'Circle'
@@ -70,7 +83,11 @@ if (!user_schema.options.toJSON) {
   user_schema.options.toJSON = {};
 }
 
-user_schema.options.toJSON.transform = (doc, ret) => omit(['_id', 'password'], rename_keys({_id: 'id'}, ret));
+user_schema.options.toJSON.transform = (doc, ret) => assoc(
+  'activity',
+  ret.activity.map(activity_item => rename_keys({_id: 'id'}, activity_item)),
+  omit(['_id', 'password'], rename_keys({_id: 'id'}, ret))
+);
 
 const user_model = mongoose.model('User', user_schema);
 
