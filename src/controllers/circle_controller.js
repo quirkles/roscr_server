@@ -4,6 +4,7 @@ import circle_model from '../models/circle_model';
 
 export const fetch_circle_by_id = (req, res) => {
   circle_model.findById(req.params.circle_id)
+  .populate('activity.originator')
   .exec((find_user_error, circle) => {
     if (find_user_error) {
       return find_user_error;
@@ -26,7 +27,11 @@ export const fetch_circle_by_id = (req, res) => {
 export const create_circle = (req, res, next) => {
   circle_model.create(Object.assign({}, req.body, {
     _id: cuid(),
-    created_by: req.user && req.user.id || null
+    created_by: req.user && req.user.id || null,
+    activity: [{
+      activity_type: 'CIRCLE_CREATED',
+      originator: req.user.id
+    }]
   }), (circle_create_err, circle) => {
     if (circle_create_err) {
       console.log(circle_create_err);

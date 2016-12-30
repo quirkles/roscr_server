@@ -10,7 +10,7 @@
     "start": "npm run build && node dist/app.js",
     "start:dev": "babel-node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon --exec babel-node --presets=latest -- src/app.js"
+    "dev": "nodemon --exec babel-node --presets=latest -- src/app.js"
   },
   "engines": {
     "node": "7.3.0",

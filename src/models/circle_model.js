@@ -18,13 +18,19 @@ const payout_event_schema = new mongoose.Schema({
 });
 
 const circle_activity_schema = new mongoose.Schema({
-  _id: String,
+  _id: {
+    type: String,
+    default: cuid()
+  },
   date: {
     type: Date,
     default: Date.now
   },
   activity_type: String,
-  activity_summary: String
+  originator: {
+    type: String,
+    ref: 'User'
+  }
 });
 
 const circle_schema = new mongoose.Schema({
