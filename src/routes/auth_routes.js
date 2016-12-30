@@ -22,7 +22,6 @@ const init_auth_routes = app => {
           if (login_err) {
             return next(login_err);
           } else {
-            console.log('###!!!! logged in user !!!###', user);
             return res.json({
               success: true,
               user
