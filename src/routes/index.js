@@ -13,10 +13,17 @@ const init_routes = app => {
   //Init circle routes
   init_circle_routes(app);
 
-  app.get('/me', (req, res)=>{
-    res.json({
-      user: req.user || 'not logged in'
-    });
+  app.get('/api/session', (req, res) => {
+    if (!req.user) {
+      return res.json({
+        active_Session: false,
+      });
+    } else {
+      return res.json({
+        active_Session: true,
+        session_user: req.user
+      });
+    }
   });
 };
 
