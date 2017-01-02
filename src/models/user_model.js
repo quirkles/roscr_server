@@ -21,13 +21,10 @@ const user_activity_schema = new mongoose.Schema({
 
 const user_schema = new mongoose.Schema({
   _id: String,
-  username: {
-    type: String,
-    unique: true
-  },
   firstname: String,
   lastname: String,
   email_address: {
+    unique: true,
     type: String
   },
   password: {
