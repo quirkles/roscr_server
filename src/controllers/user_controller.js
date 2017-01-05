@@ -21,7 +21,6 @@ export const fetch_user_by_id = (req, res) => {
 };
 
 export const update_user_with_id = (req, res) => {
-  console.log(req.body);
   user_model.findOneAndUpdate({_id: req.params.user_id}, Object.assign(req.body, {last_modified: new Date()}), {new: true})
   .exec((find_and_update_error, user) => {
     if (find_and_update_error) {
@@ -40,3 +39,10 @@ export const update_user_with_id = (req, res) => {
     }
   });
 };
+
+export const invite_user = (req, res) => {
+  return res.json({
+    success: true,
+    invitee_email_address: req.body.invitee_email_address
+  });
+}
