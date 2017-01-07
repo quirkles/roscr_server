@@ -45,4 +45,4 @@ export const invite_user = (req, res) => {
     success: true,
     invitee_email_address: req.body.invitee_email_address
   });
-}
+};
