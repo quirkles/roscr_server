@@ -4,10 +4,21 @@ import {firstnames, lastnames, cities, countries, professions} from './user_attr
 import {capitalize} from './string';
 import {get_random_element_from_array} from './array';
 
-export const generate_user = () => {
+const email_domains = [
+  'email',
+  'gmail',
+  'yahoo',
+  'hotmail',
+  'googlemail',
+  'outlook'
+];
+
+
+export const generate_random_user = () => {
+  const date_now = new Date();
   const firstname = get_random_element_from_array(firstnames).toLowerCase();
   const lastname = get_random_element_from_array(lastnames).toLowerCase();
-  const email_address = `${firstname}.${lastname}@email.com`;
+  const email_address = `${firstname}.${lastname}_${date_now.getMilliseconds()}@${get_random_element_from_array(email_domains)}.com`;
 
   return ({
     _id: cuid(),
@@ -19,12 +30,10 @@ export const generate_user = () => {
     country: get_random_element_from_array(countries),
     about_me: null,
     profession: get_random_element_from_array(professions),
-    last_modified: new Date(),
-    created: new Date(),
+    last_modified: date_now,
+    created: date_now,
     activity: [],
     circles_created: [],
     circles_as_member: []
   });
 };
-
-console.log(generate_user());
