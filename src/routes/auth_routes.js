@@ -8,7 +8,7 @@ const init_auth_routes = app => {
     res.render('login.html');
   });
 
-  app.post('/login', (req, res, next) => {
+  app.post('/api/login', (req, res, next) => {
     passport.authenticate('local', (authenticate_err, user, info) => {
       if (authenticate_err) {
         return next(authenticate_err);
@@ -30,6 +30,11 @@ const init_auth_routes = app => {
         });
       }
     })(req, res, next);
+  });
+
+  app.post('/api/logout', (req, res) => {
+    req.logout();
+    return res.json({success: true});
   });
 
   app.post('/signup', (req, res, next) => {
