@@ -51,7 +51,7 @@ const seed_circles = unsaved_users => {
         if (user_create_err) {
           console.log(user_create_err);
         } else {
-          console.log(saved_users);
+          console.log(`Successfully saved ${saved_users.length} users and ${created_circles.length} circles.`);
           db.disconnect();
         }
       });
