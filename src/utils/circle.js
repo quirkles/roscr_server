@@ -21,6 +21,7 @@ export const generate_random_circle = () => {
     cycle_period: get_random_element_from_array(periods),
     start_date: D.add('days', get_random_int_in_range(1, 100), date_now),
     members,
+    is_public: true,
     activity: [],
     payout_events: [],
     savings_goals: [],

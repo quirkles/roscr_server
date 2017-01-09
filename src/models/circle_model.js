@@ -60,6 +60,10 @@ const circle_schema = new mongoose.Schema({
     type: Array,
     default: []
   },
+  is_public: {
+    type: Boolean,
+    default: false
+  },
   activity: [circle_activity_schema],
   payout_events: [payout_event_schema],
   savings_goals: [savings_goal_schema],

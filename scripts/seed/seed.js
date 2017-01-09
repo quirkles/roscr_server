@@ -5,7 +5,7 @@ import {merge, mergeWith, assoc, concat} from 'ramda';
 import user_model from '../../src/models/user_model';
 import circle_model from '../../src/models/circle_model';
 
-import {generate_random_user} from '../../src/utils/user';
+import {generate_random_user, get_default_user} from '../../src/utils/user';
 import {generate_random_circle} from '../../src/utils/circle';
 import {get_n_random_elements_from_array, get_random_element_from_array} from '../../src/utils/array';
 
@@ -59,4 +59,8 @@ const seed_circles = unsaved_users => {
   });
 };
 
-seed_circles(generate_users(100));
+const users_to_create = generate_users(100);
+
+users_to_create.push(get_default_user());
+
+seed_circles(users_to_create);
