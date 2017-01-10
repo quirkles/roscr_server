@@ -1,6 +1,27 @@
 import cuid from 'cuid';
+import {merge, pick, evolve, assoc} from 'ramda';
 
 import circle_model from '../models/circle_model';
+
+const get_query_params = query => {
+  const default_query_params = {
+    limit: 10,
+    skip: 0,
+    sort_by: 'name'
+  };
+
+  const transformer = {
+    limit: limit => parseInt(limit, 10),
+    skip: skip => parseInt(skip, 10),
+    sort_by: value =>
+      assoc(
+        value.split('-').pop(),
+        value.charAt(0) === '-' ? 'desc' : 'asc',
+        {}
+      )
+  };
+  return evolve(transformer, merge(default_query_params, query));
+};
 
 export const fetch_circle_by_id = (req, res) => {
   circle_model.findById(req.params.circle_id)
@@ -34,7 +55,6 @@ export const create_circle = (req, res, next) => {
     }]
   }), (circle_create_err, circle) => {
     if (circle_create_err) {
-      console.log(circle_create_err);
       return next(circle_create_err);
     } else {
       req.user.circles_created.push(circle.id);
@@ -46,9 +66,34 @@ export const create_circle = (req, res, next) => {
             success: true,
             circle,
           });
-
         }
       });
     }
   });
+};
+
+export const fetch_circles = (req, res, next) => {
+  const {limit, skip, sort_by} = get_query_params(req.query);
+
+  circle_model.find()
+    .limit(limit)
+    .skip(skip)
+    .sort(sort_by)
+    .exec((find_circles_err, circles) => {
+        if (find_circles_err) {
+          return next(find_circles_err);
+        } else {
+          return circle_model.count().exec((get_count_err, count) => {
+            if (get_count_err) {
+              return next(get_count_err);
+            } else {
+              return res.json({
+                  circles,
+                  query: ({limit, skip, sort_by}),
+                  count
+              });
+            }
+          });
+        }
+    });
 };
