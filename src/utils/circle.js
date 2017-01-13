@@ -24,8 +24,6 @@ export const generate_random_circle = () => {
     is_public: true,
     activity: [],
     payout_events: [],
-    savings_goals: [],
-    created: date_now,
-    last_modified: date_now
+    savings_goals: []
   });
 };
