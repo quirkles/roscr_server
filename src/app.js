@@ -13,7 +13,7 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
-const allowed_origins = ['http://localhost:3000', 'https://hidden-castle-70402.herokuapp.com'];
+const allowed_origins = ['http://localhost:3000', 'https://roscr-client.herokuapp.com'];
 
 const allow_cross_domain = (req, res, next) => {
     const origin = req.headers.origin;
