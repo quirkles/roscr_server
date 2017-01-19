@@ -49,7 +49,11 @@ const init_auth_routes = app => {
     user_model.create(user_data, (err, user) => {
       if (err) {
         console.log(err);
-        return next(err);
+        if (err.code === 11000) {
+          return res.status(400).json(err);
+        } else {
+          return next(err);
+        }
       } else {
         return req.logIn(user, login_err => {
           if (login_err) {
