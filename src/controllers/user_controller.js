@@ -1,4 +1,28 @@
 import user_model from '../models/user_model';
+import {merge, evolve, assoc} from 'ramda';
+
+const get_query_params = query => {
+  const default_query_params = {
+    limit: 10,
+    skip: 0,
+    cycle_period: '',
+    participant_count: '',
+    query: '',
+    sort_by: 'name'
+  };
+
+  const transformer = {
+    limit: limit => parseInt(limit, 10),
+    skip: skip => parseInt(skip, 10),
+    sort_by: value =>
+      assoc(
+        value.split('-').pop(),
+        value.charAt(0) === '-' ? 'desc' : 'asc',
+        {}
+      )
+  };
+  return evolve(transformer, merge(default_query_params, query));
+};
 
 export const fetch_user_by_id = (req, res) => {
   user_model.findById(req.params.user_id)
@@ -17,6 +41,51 @@ export const fetch_user_by_id = (req, res) => {
         user
       });
     }
+  });
+};
+
+export const fetch_users = (req, res, next) => {
+  const {limit, skip, query, sort_by} = get_query_params(req.query);
+  const find_query = {};
+  const query_regexp = new RegExp(query.trim(), 'i');
+
+
+  if (query.trim().length) {
+    Object.assign(find_query, {
+      $or: [
+        {
+          firstname: query_regexp
+        },
+        {
+          lastname: query_regexp
+        },
+        {
+          email_address: query_regexp
+        }
+      ]
+    });
+  }
+
+  user_model.find(find_query)
+  .limit(limit)
+  .skip(skip)
+  .sort(sort_by)
+  .exec((find_users_err, users) => {
+      if (find_users_err) {
+        return next(find_users_err);
+      } else {
+        return user_model.count().exec((get_count_err, count) => {
+          if (get_count_err) {
+            return next(get_count_err);
+          } else {
+            return res.json({
+                users,
+                query: ({limit, skip, sort_by}),
+                count
+            });
+          }
+        });
+      }
   });
 };
 

@@ -1,5 +1,5 @@
 import cuid from 'cuid';
-import {merge, pick, evolve, assoc} from 'ramda';
+import {merge, evolve, assoc} from 'ramda';
 
 import circle_model from '../models/circle_model';
 
