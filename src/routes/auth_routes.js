@@ -50,7 +50,11 @@ const init_auth_routes = app => {
       if (err) {
         console.log(err);
         if (err.code === 11000) {
-          return res.status(400).json(err);
+          return res.status(400).json({
+            success: false,
+            error_code: 'EMAIL_ALREADY_EXISTS',
+            taken_email_address: req.body.email_address
+          });
         } else {
           return next(err);
         }
