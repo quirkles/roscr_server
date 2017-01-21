@@ -36,6 +36,7 @@ const user_schema = new mongoose.Schema({
   profession: String,
   last_modified: Date,
   created: Date,
+  trust_score: Number,
   activity: [user_activity_schema],
   circles_created: [{
     type: String,

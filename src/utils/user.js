@@ -32,6 +32,7 @@ export const generate_random_user = () => {
     profession: get_random_element_from_array(professions),
     last_modified: date_now,
     created: date_now,
+    trust_score: 75 + Math.floor(Math.random() * 25),
     activity: [],
     circles_created: [],
     circles_as_member: []
