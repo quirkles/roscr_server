@@ -5,6 +5,8 @@ import {Strategy as facebook_strategy} from 'passport-facebook';
 import user_model, {compare_password_with_hash} from '../models/user_model.js';
 import {FACEBOOK_APP_ID, FACEBOOK_APP_SECRET} from './facebook';
 
+const ROSCR_CLIENT_HOST = process.env.ROSCR_CLIENT_HOST || 'http://localhost:5000';
+
 const init_passport = app => {
   app.use(passport.initialize());
   app.use(passport.session());
@@ -39,7 +41,7 @@ const init_passport = app => {
   passport.use(new facebook_strategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: 'http://localhost:5000/api/auth/facebook/callback',
+    callbackURL: `${ROSCR_CLIENT_HOST}/api/auth/facebook/callback`,
     profileFields: ['id', 'displayName', 'name', 'emails', 'photos']
   }, function (accessToken, refreshToken, profile, done) {
     const user_data = {
