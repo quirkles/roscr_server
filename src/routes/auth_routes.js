@@ -20,7 +20,7 @@ const init_auth_routes = app => {
           message: info.message
         });
       } else {
-        req.logIn(user, login_err => {
+        return req.logIn(user, login_err => {
           if (login_err) {
             return next(login_err);
           } else {
@@ -41,7 +41,6 @@ const init_auth_routes = app => {
   app.get('/api/auth/facebook/callback', passport.authenticate('facebook', {
     failureRedirect: '/#/loginfailure'
   }), (req, res) => {
-    console.log('## USER: ##', req.user);
     res.redirect(`${ROSCR_CLIENT_HOST}/users/${req.user && req.user.id}`);
   });
 
