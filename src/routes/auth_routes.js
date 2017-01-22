@@ -38,7 +38,7 @@ const init_auth_routes = app => {
     scope: ['email']
   }));
 
-  app.get('/auth/facebook/callback',
+  app.get('/api/auth/facebook/callback',
     passport.authenticate('facebook', {failureRedirect: '/loginfailure'}),
     (req, res) => {
       res.redirect(`${ROSCR_CLIENT_HOST}/users/${req.user && req.user.id}`);
