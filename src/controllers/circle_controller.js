@@ -28,7 +28,6 @@ const get_query_params = query => {
 
 export const fetch_circle_by_id = (req, res) => {
   circle_model.findById(req.params.circle_id)
-  .populate('activity.originator')
   .exec((find_user_error, circle) => {
     if (find_user_error) {
       return find_user_error;
