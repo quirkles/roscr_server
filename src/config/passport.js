@@ -38,13 +38,14 @@ const init_passport = app => {
     }
   ));
 
+  console.log(FACEBOOK_APP_SECRET, FACEBOOK_APP_ID);
+
   passport.use(new facebook_strategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: `${ROSCR_SERVER_HOST}/api/auth/facebook/callback`,
     profileFields: ['id', 'displayName', 'name', 'emails', 'photos']
   }, function (accessToken, refreshToken, profile, done) {
-    console.log('##!!@@@#$#@$@#%#$%#$');
     const user_data = {
       facebook_id: profile.id,
       email_address: profile.emails.map(email => email.value).pop(),
