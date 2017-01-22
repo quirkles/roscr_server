@@ -38,14 +38,14 @@ const init_passport = app => {
     }
   ));
 
-  console.log(FACEBOOK_APP_SECRET, FACEBOOK_APP_ID);
+  console.log(`${ROSCR_SERVER_HOST}/auth/facebook/callback`);
 
   passport.use(new facebook_strategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: `${ROSCR_SERVER_HOST}/api/auth/facebook/callback`,
     profileFields: ['id', 'displayName', 'name', 'emails', 'photos']
-  }, function (accessToken, refreshToken, profile, done) {
+  }, function (accessToken, refreshToken, profile, cb) {
     const user_data = {
       facebook_id: profile.id,
       email_address: profile.emails.map(email => email.value).pop(),
@@ -65,15 +65,15 @@ const init_passport = app => {
       ]
     }, (findErr, user) => {
       if (findErr) {
-        return done(findErr);
+        return cb(findErr);
       } else if (user) {
-        return done(null, user);
+        return cb(null, user);
       } else {
         return new_user_model.save((err, u) => {
           if (err) {
-            return done(err);
+            return cb(err);
           } else {
-            return done(null, u);
+            return cb(null, u);
           }
         });
       }
