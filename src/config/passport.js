@@ -44,6 +44,7 @@ const init_passport = app => {
     callbackURL: `${ROSCR_SERVER_HOST}/api/auth/facebook/callback`,
     profileFields: ['id', 'displayName', 'name', 'emails', 'photos']
   }, function (accessToken, refreshToken, profile, done) {
+    console.log('##!!@@@#$#@$@#%#$%#$');
     const user_data = {
       facebook_id: profile.id,
       email_address: profile.emails.map(email => email.value).pop(),
