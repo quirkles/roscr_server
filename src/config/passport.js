@@ -1,5 +1,6 @@
 import passport from 'passport';
 import {Strategy as local_strategy} from 'passport-local';
+import {Strategy as facebook_strategy} from 'passport-facebook';
 
 import user_model, {compare_password_with_hash} from '../models/user_model.js';
 
