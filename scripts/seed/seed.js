@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {uri} from '../../src/config/mongodb';
 import {merge, mergeWith, assoc, concat} from 'ramda';
+import cuid from 'cuid';
 
 import user_model from '../../src/models/user_model';
 import circle_model from '../../src/models/circle_model';
@@ -14,10 +15,21 @@ const db = mongoose.connect(uri);
 const generate_users = n => Array.from({length: n}, generate_random_user);
 const generate_circles = n => Array.from({length: n}, generate_random_circle);
 
-const modify_circle_users = (circle, members) => merge(circle, {
-  created_by: get_random_element_from_array(members),
-  members
-});
+const modify_circle_users = (circle, members) => {
+  const creator_id = get_random_element_from_array(members);
+  return merge(circle, {
+    created_by: creator_id,
+    activity: [
+      {
+        _id: cuid(),
+        date: Date.now(),
+        activity_type: 'CIRCLE_CREATED',
+        originator: creator_id
+      }
+    ],
+    members
+  });
+};
 
 const seed_circles = unsaved_users => {
   const user_ids = unsaved_users.map(u => u._id);

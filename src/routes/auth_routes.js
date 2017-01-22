@@ -32,6 +32,17 @@ const init_auth_routes = app => {
     })(req, res, next);
   });
 
+  app.get('/api/auth/facebook', passport.authenticate('facebook', {
+    scope: ['email']
+  }));
+
+  app.get('/api/auth/facebook/callback', passport.authenticate('facebook', {
+    failureRedirect: '/#/loginfailure'
+  }), (req, res) => {
+    console.log('## USER: ##', req.user);
+    res.redirect(`http://localhost:3000/users/${req.user && req.user.id}`);
+  });
+
   app.post('/api/logout', (req, res) => {
     req.logout();
     return res.json({success: true});

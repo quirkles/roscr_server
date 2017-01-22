@@ -3,6 +3,7 @@ import {Strategy as local_strategy} from 'passport-local';
 import {Strategy as facebook_strategy} from 'passport-facebook';
 
 import user_model, {compare_password_with_hash} from '../models/user_model.js';
+import {FACEBOOK_APP_ID, FACEBOOK_APP_SECRET} from './facebook';
 
 const init_passport = app => {
   app.use(passport.initialize());
@@ -34,6 +35,47 @@ const init_passport = app => {
       });
     }
   ));
+
+  passport.use(new facebook_strategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: 'http://localhost:5000/api/auth/facebook/callback',
+    profileFields: ['id', 'displayName', 'name', 'emails', 'photos']
+  }, function (accessToken, refreshToken, profile, done) {
+    const user_data = {
+      facebook_id: profile.id,
+      email_address: profile.emails.map(email => email.value).pop(),
+      user_name: profile.username || profile.displayName || 'n/a'
+    };
+
+    const new_user_model = new user_model(user_data);
+
+    user_model.findOne({
+      $or: [
+        {
+          facebook_id: profile.id
+        },
+        {
+          email_address: user_data.email_address
+        }
+      ]
+    }, (findErr, user) => {
+      if (findErr) {
+        return done(findErr);
+      } else if (user) {
+        return done(null, user);
+      } else {
+        return new_user_model.save((err, u) => {
+          if (err) {
+            return done(err);
+          } else {
+            return done(null, u);
+          }
+        });
+      }
+    });
+  }
+));
 };
 
 export default init_passport;

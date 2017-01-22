@@ -56,10 +56,10 @@ const circle_schema = new mongoose.Schema({
     type: Date,
     default: D.add('days', 14, new Date())
   },
-  members: {
-    type: Array,
-    default: []
-  },
+  members: [{
+    type: String,
+    ref: 'User'
+  }],
   is_public: {
     type: Boolean,
     default: false

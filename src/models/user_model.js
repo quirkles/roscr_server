@@ -20,9 +20,16 @@ const user_activity_schema = new mongoose.Schema({
 });
 
 const user_schema = new mongoose.Schema({
-  _id: String,
+  _id: {
+    unique: true,
+    type: String
+  },
+  facebook_id: {
+    type: String
+  },
   firstname: String,
   lastname: String,
+  user_name: String,
   email_address: {
     unique: true,
     type: String
