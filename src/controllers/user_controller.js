@@ -5,10 +5,9 @@ const get_query_params = query => {
   const default_query_params = {
     limit: 10,
     skip: 0,
-    cycle_period: '',
-    participant_count: '',
     query: '',
-    sort_by: 'name'
+    sort_by: 'name',
+    min_trust_score: null
   };
 
   const transformer = {
@@ -45,7 +44,7 @@ export const fetch_user_by_id = (req, res) => {
 };
 
 export const fetch_users = (req, res, next) => {
-  const {limit, skip, query, sort_by} = get_query_params(req.query);
+  const {limit, skip, query, sort_by, min_trust_score} = get_query_params(req.query);
   const find_query = {};
   const query_regexp = new RegExp(query.trim(), 'i');
 
@@ -63,6 +62,14 @@ export const fetch_users = (req, res, next) => {
           email_address: query_regexp
         }
       ]
+    });
+  }
+
+  if(min_trust_score) {
+    Object.assign(find_query, {
+      'trust_score': {
+          $gt: min_trust_score -1
+        }
     });
   }
 
