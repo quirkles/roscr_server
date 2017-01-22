@@ -3,6 +3,8 @@ import passport from 'passport';
 import user_model from '../models/user_model';
 import cuid from 'cuid';
 
+const ROSCR_CLIENT_HOST = process.env.ROSCR_CLIENT_HOST || 'http://localhost:3000';
+
 const init_auth_routes = app => {
   app.get('/login', (req, res) => {
     res.render('login.html');
@@ -40,7 +42,7 @@ const init_auth_routes = app => {
     failureRedirect: '/#/loginfailure'
   }), (req, res) => {
     console.log('## USER: ##', req.user);
-    res.redirect(`http://localhost:3000/users/${req.user && req.user.id}`);
+    res.redirect(`${ROSCR_CLIENT_HOST}/users/${req.user && req.user.id}`);
   });
 
   app.post('/api/logout', (req, res) => {
