@@ -1,2 +1,2 @@
-export const FACEBOOK_APP_ID = '';
-export const FACEBOOK_APP_SECRET = '';
+export const FACEBOOK_APP_ID = null;
+export const FACEBOOK_APP_SECRET = null;
