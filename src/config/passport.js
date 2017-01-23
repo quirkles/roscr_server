@@ -38,8 +38,6 @@ const init_passport = app => {
     }
   ));
 
-  console.log(`${ROSCR_SERVER_HOST}/auth/facebook/callback`);
-
   passport.use(new facebook_strategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
