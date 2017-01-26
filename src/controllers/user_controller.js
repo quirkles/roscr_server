@@ -24,8 +24,10 @@ const get_query_params = query => {
 };
 
 export const fetch_user_by_id = (req, res) => {
-  user_model.findById(req.params.user_id)
-  .exec((find_user_error, user) => {
+  user_model
+    .findById(req.params.user_id)
+    .select(req.user && req.user.id === req.params.user_id ? '' : '-notifications')
+    .exec((find_user_error, user) => {
     if (find_user_error) {
       return find_user_error;
     } else if (user === null) {
@@ -76,6 +78,7 @@ export const fetch_users = (req, res, next) => {
   user_model.find(find_query)
   .limit(limit)
   .skip(skip)
+  .select('-notifications')
   .sort(sort_by)
   .exec((find_users_err, users) => {
       if (find_users_err) {

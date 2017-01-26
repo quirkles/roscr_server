@@ -52,14 +52,7 @@ const init_auth_routes = app => {
 
   app.post('/signup', (req, res, next) => {
 
-    const user_data = Object.assign({
-      _id: cuid(),
-      activity: {
-        activity_type: 'USER_CREATED'
-      }
-    }, req.body);
-
-    user_model.create(user_data, (err, user) => {
+    user_model.create(req.body, (err, user) => {
       if (err) {
         if (err.code === 11000) {
           return res.status(400).json({

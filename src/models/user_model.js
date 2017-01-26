@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import cuid from 'cuid';
-import {assoc, omit} from 'ramda';
+import {evolve, assoc, omit, map} from 'ramda';
 
 import {rename_keys} from '../utils/object';
 
@@ -17,6 +17,19 @@ const user_activity_schema = new mongoose.Schema({
     default: Date.now
   },
   activity_type: String
+});
+
+const user_notification_schema = new mongoose.Schema({
+  _id: {
+    type: String,
+    default: cuid()
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  notification_type: String,
+  data: Object
 });
 
 const user_schema = new mongoose.Schema({
@@ -48,6 +61,7 @@ const user_schema = new mongoose.Schema({
     default: 85
   },
   activity: [user_activity_schema],
+  notifications: [user_notification_schema],
   circles_created: [{
     type: String,
     ref: 'Circle'
@@ -58,13 +72,28 @@ const user_schema = new mongoose.Schema({
   }]
 });
 
+const to_json_transform = {
+  activity: map(activity_item => rename_keys({_id: 'id'}, activity_item)),
+  notifications: map(notification => rename_keys({_id: 'id'}, notification))
+};
+
 export const compare_password_with_hash = (password, hash) => bcrypt.compareSync(password, hash);
 
 user_schema.pre('save', function (next) {
   const user = this;
 
-  this.created = this.created || new Date();
-  this._id = this._id || cuid();
+  if (this.isNew) {
+    // User is being created
+    this.created = this.created || new Date();
+    this._id = this._id || cuid();
+    this.activity.push({
+      activity_type: 'USER_CREATED'
+    });
+    this.notifications.push({
+      notification_type: 'USER_CREATED'
+    });
+  }
+
   this.last_modified = new Date();
 
   if (!user.isModified('password')) {
@@ -91,11 +120,7 @@ if (!user_schema.options.toJSON) {
   user_schema.options.toJSON = {};
 }
 
-user_schema.options.toJSON.transform = (doc, ret) => assoc(
-  'activity',
-  ret.activity.map(activity_item => rename_keys({_id: 'id'}, activity_item)),
-  omit(['_id', 'password'], rename_keys({_id: 'id'}, ret))
-);
+user_schema.options.toJSON.transform = (doc, ret) => omit(['_id', 'password'], rename_keys({_id: 'id'}, evolve(to_json_transform, ret)));
 
 const user_model = mongoose.model('User', user_schema);
 
