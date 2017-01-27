@@ -6,10 +6,18 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 
 import init_routes from './routes';
+
+import socket from './config/socket'
 import {uri} from './config/mongodb';
 import init_passport from './config/passport';
 
 const app = express();
+
+const io = socket();
+
+io.on('connection', function(socket){
+  console.log('## a user connected !');
+});
 
 const port = process.env.PORT || 5000;
 
