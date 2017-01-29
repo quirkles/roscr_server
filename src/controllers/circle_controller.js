@@ -99,6 +99,7 @@ export const fetch_circles = (req, res, next) => {
   circle_model.find(find_query)
   .limit(limit)
   .skip(skip)
+  .populate('created_by')
   .sort(sort_by)
   .exec((find_circles_err, circles) => {
       if (find_circles_err) {
