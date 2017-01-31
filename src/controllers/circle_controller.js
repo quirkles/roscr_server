@@ -28,6 +28,7 @@ const get_query_params = query => {
 
 export const fetch_circle_by_id = (req, res) => {
   circle_model.findById(req.params.circle_id)
+  .populate('created_by')
   .exec((find_user_error, circle) => {
     if (find_user_error) {
       return find_user_error;
@@ -54,21 +55,24 @@ export const create_circle = (req, res, next) => {
     activity: [{
       activity_type: 'CIRCLE_CREATED',
       originator: req.user.id
-    }]
+    }],
+    members: [req.user && req.user.id]
   }), (circle_create_err, circle) => {
     if (circle_create_err) {
       return next(circle_create_err);
     } else {
-      req.user.circles_created.push(circle.id);
-      return req.user.save(user_save_err => {
-        if (user_save_err) {
-          return next(user_save_err);
-        } else {
-          return res.json({
-            success: true,
-            circle,
-          });
-        }
+      return circle_model.populate(circle, {path: 'created_by'}, (populate_err, populated_circle) => {
+        req.user.circles_created.push(circle.id);
+        return req.user.save(user_save_err => {
+          if (user_save_err) {
+            return next(user_save_err);
+          } else {
+            return res.json({
+              success: true,
+              circle,
+            });
+          }
+        });
       });
     }
   });
