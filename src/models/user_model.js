@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import cuid from 'cuid';
-import {evolve, assoc, omit, map} from 'ramda';
+import {evolve, omit, map} from 'ramda';
 
 import {rename_keys} from '../utils/object';
 

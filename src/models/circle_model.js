@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 import D from 'date-fp';
 import cuid from 'cuid';
-import {omit} from 'ramda';
+import {omit, map, evolve} from 'ramda';
 
 import {rename_keys} from '../utils/object';
 
 const savings_goal_schema = new mongoose.Schema({
   _id: String,
-  circle_member_id: String,
+  member_id: String,
   savings_goal: String
 });
 
@@ -74,6 +74,11 @@ const circle_schema = new mongoose.Schema({
   last_modified: Date
 });
 
+const to_json_transform = {
+  payout_events: map(activity_item => rename_keys({_id: 'id'}, activity_item)),
+  savings_goals: map(notification => rename_keys({_id: 'id'}, notification))
+};
+
 circle_schema.pre('save', function (next) {
   this.created = this.created || new Date();
   this.last_modified = new Date();
@@ -94,7 +99,14 @@ if (!circle_schema.options.toJSON) {
   circle_schema.options.toJSON = {};
 }
 
-circle_schema.options.toJSON.transform = (doc, ret) => omit(['_id'], rename_keys({_id: 'id'}, ret));
+circle_schema.options.toJSON.transform = (doc, ret) =>
+  omit(
+    ['_id'],
+    rename_keys(
+      {_id: 'id'},
+      evolve(to_json_transform, ret)
+    )
+  );
 
 const circle_model = mongoose.model('Circle', circle_schema);
 
