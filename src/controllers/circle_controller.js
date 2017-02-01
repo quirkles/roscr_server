@@ -80,7 +80,9 @@ export const create_circle = (req, res, next) => {
 
 export const fetch_circles = (req, res, next) => {
   const {limit, skip, query, participant_count, cycle_period, sort_by} = get_query_params(req.query);
-  const find_query = {};
+  const find_query = {
+    is_public: false
+  };
 
   if (query.trim().length) {
     Object.assign(find_query, {
@@ -109,13 +111,13 @@ export const fetch_circles = (req, res, next) => {
       if (find_circles_err) {
         return next(find_circles_err);
       } else {
-        return circle_model.count().exec((get_count_err, count) => {
+        return circle_model.count(find_query).exec((get_count_err, count) => {
           if (get_count_err) {
             return next(get_count_err);
           } else {
             return res.json({
                 circles,
-                query: ({limit, skip, sort_by}),
+                query: {limit, skip, sort_by},
                 count
             });
           }

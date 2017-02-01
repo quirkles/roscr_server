@@ -62,7 +62,7 @@ const circle_schema = new mongoose.Schema({
   }],
   is_public: {
     type: Boolean,
-    default: false
+    default: true
   },
   activity: [circle_activity_schema],
   payout_events: [payout_event_schema],
