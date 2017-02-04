@@ -7,14 +7,14 @@ import {rename_keys} from '../utils/object';
 
 const savings_goal_schema = new mongoose.Schema({
   _id: String,
-  member_id: String,
+  user_id: String,
   savings_goal: String
 });
 
 const payout_event_schema = new mongoose.Schema({
   _id: String,
   date: Date,
-  circle_member_id: String
+  reipient_id: String
 });
 
 const circle_activity_schema = new mongoose.Schema({

@@ -1,5 +1,5 @@
 import cuid from 'cuid';
-import {merge, evolve, assoc} from 'ramda';
+import {merge, evolve, assoc, any} from 'ramda';
 
 import circle_model from '../models/circle_model';
 
@@ -69,7 +69,7 @@ export const create_circle = (req, res, next) => {
           } else {
             return res.json({
               success: true,
-              circle,
+              circle: populated_circle,
             });
           }
         });
@@ -123,5 +123,42 @@ export const fetch_circles = (req, res, next) => {
           }
         });
       }
+  });
+};
+
+export const update_savings_goal = (req, res) => {
+  // TODO: Validations here
+  circle_model.findById(req.params.circle_id)
+  .exec((find_circle_error, circle) => {
+    if (find_circle_error) {
+      return find_circle_error;
+    } else {
+      if (any(savings_goal => savings_goal.user_id === req.params.user_id, circle.savings_goals)) {
+        circle.savings_goals = circle.savings_goals
+          .map(savings_goal => {
+            if (savings_goal.user_id === req.params.user_id) {
+              savings_goal.savings_goal = req.body.savings_goal
+              return savings_goal
+            } else {
+              return savings_goal;
+            }
+          });
+      } else {
+        circle.savings_goals.push({
+          _id: cuid(),
+          user_id: req.params.user_id,
+          savings_goal: req.body.savings_goal
+        });
+      }
+      return circle.save(circle_save_err => {
+        if (circle_save_err) {
+          return circle_save_err;
+        } else {
+          return res.json({
+            success: true
+          });
+        }
+      });
+    }
   });
 };
