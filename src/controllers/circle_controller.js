@@ -81,7 +81,7 @@ export const create_circle = (req, res, next) => {
 export const fetch_circles = (req, res, next) => {
   const {limit, skip, query, participant_count, cycle_period, sort_by} = get_query_params(req.query);
   const find_query = {
-    is_public: false
+    is_public: true
   };
 
   if (query.trim().length) {
@@ -101,7 +101,6 @@ export const fetch_circles = (req, res, next) => {
       cycle_period
     });
   }
-
   circle_model.find(find_query)
   .limit(limit)
   .skip(skip)
@@ -137,8 +136,8 @@ export const update_savings_goal = (req, res) => {
         circle.savings_goals = circle.savings_goals
           .map(savings_goal => {
             if (savings_goal.user_id === req.params.user_id) {
-              savings_goal.savings_goal = req.body.savings_goal
-              return savings_goal
+              savings_goal.savings_goal = req.body.savings_goal;
+              return savings_goal;
             } else {
               return savings_goal;
             }
