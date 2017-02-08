@@ -8,7 +8,7 @@ const get_query_params = query => {
     limit: 10,
     skip: 0,
     cycle_period: '',
-    participant_count: '',
+    participant_count: '{\"min\":9,\"max\":10}',
     query: '',
     sort_by: 'name'
   };
@@ -16,6 +16,10 @@ const get_query_params = query => {
   const transformer = {
     limit: limit => parseInt(limit, 10),
     skip: skip => parseInt(skip, 10),
+    participant_count: participant_count => {
+      const {min, max} = JSON.parse(participant_count);
+      return {$gte: min, $lte: max};
+    },
     sort_by: value =>
       assoc(
         value.split('-').pop(),
@@ -90,10 +94,8 @@ export const fetch_circles = (req, res, next) => {
     });
   }
 
-  if (participant_count.length) {
-    Object.assign(find_query, {
-      participant_count: parseInt(participant_count, 10)
-    });
+  if (participant_count) {
+    Object.assign(find_query, {participant_count});
   }
 
   if (cycle_period.length) {
