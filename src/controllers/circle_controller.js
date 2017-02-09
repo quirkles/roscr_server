@@ -5,7 +5,7 @@ import circle_model from '../models/circle_model';
 
 const get_query_params = query => {
   const default_query_params = {
-    limit: 10,
+    limit: 25,
     skip: 0,
     cycle_period: '',
     participant_count: '{\"min\":8,\"max\":12}',
