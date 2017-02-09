@@ -8,7 +8,8 @@ const get_query_params = query => {
     limit: 10,
     skip: 0,
     cycle_period: '',
-    participant_count: '{\"min\":9,\"max\":10}',
+    participant_count: '{\"min\":8,\"max\":12}',
+    withdrawal_amount: '{\"min\":50,\"max\":750}',
     query: '',
     sort_by: 'name'
   };
@@ -18,6 +19,10 @@ const get_query_params = query => {
     skip: skip => parseInt(skip, 10),
     participant_count: participant_count => {
       const {min, max} = JSON.parse(participant_count);
+      return {$gte: min, $lte: max};
+    },
+    withdrawal_amount: withdrawal_amount => {
+      const {min, max} = JSON.parse(withdrawal_amount);
       return {$gte: min, $lte: max};
     },
     sort_by: value =>
@@ -83,7 +88,7 @@ export const create_circle = (req, res, next) => {
 };
 
 export const fetch_circles = (req, res, next) => {
-  const {limit, skip, query, participant_count, cycle_period, sort_by} = get_query_params(req.query);
+  const {limit, skip, query, participant_count, withdrawal_amount, cycle_period, sort_by} = get_query_params(req.query);
   const find_query = {
     is_public: true
   };
@@ -96,6 +101,10 @@ export const fetch_circles = (req, res, next) => {
 
   if (participant_count) {
     Object.assign(find_query, {participant_count});
+  }
+
+  if (withdrawal_amount) {
+    Object.assign(find_query, {withdrawal_amount});
   }
 
   if (cycle_period.length) {
