@@ -11,7 +11,7 @@ const get_query_params = query => {
     participant_count: '{\"min\":8,\"max\":12}',
     withdrawal_amount: '{\"min\":50,\"max\":750}',
     query: '',
-    sort_by: 'name'
+    sort_by: 'start_date'
   };
 
   const transformer = {
