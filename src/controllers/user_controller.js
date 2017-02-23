@@ -67,10 +67,10 @@ export const fetch_users = (req, res, next) => {
     });
   }
 
-  if(min_trust_score) {
+  if (min_trust_score) {
     Object.assign(find_query, {
       'trust_score': {
-          $gt: min_trust_score -1
+          $gt: min_trust_score - 1
         }
     });
   }
@@ -84,7 +84,7 @@ export const fetch_users = (req, res, next) => {
       if (find_users_err) {
         return next(find_users_err);
       } else {
-        return user_model.count().exec((get_count_err, count) => {
+        return user_model.count(find_query).exec((get_count_err, count) => {
           if (get_count_err) {
             return next(get_count_err);
           } else {
